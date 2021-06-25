@@ -84,32 +84,56 @@ uint8_t *cb0r(uint8_t *start, uint8_t *stop, uint32_t skip, cb0r_t result)
   // bytes and string structures
   l_byte4:
     size = 2;
+    if (start + size >= stop) {
+      type = CB0R_ERR;
+      goto l_fail;
+    }
     end += (uint32_t)(start[1]) << 24;
     end += (uint32_t)(start[2]) << 16;
   l_byte2:
     size += 1;
+    if (start + size >= stop) {
+      type = CB0R_ERR;
+      goto l_fail;
+    }
     end += (uint32_t)(start[size]) << 8;
   l_byte1:
     size += 1;
+    if (start + size >= stop) {
+      type = CB0R_ERR;
+      goto l_fail;
+    }
     end += start[size] + size;
     goto l_finish;
-  l_byte: 
+  l_byte:
     end += (start[0] & 0x1f);
     goto l_finish;
 
   // array and map structures
   l_array4:
     size = 2;
+    if (start + size >= stop) {
+      type = CB0R_ERR;
+      goto l_fail;
+    }
     count += (uint32_t)(start[1]) << 24;
     count += (uint32_t)(start[2]) << 16;
   l_array2:
     size += 1;
+    if (start + size >= stop) {
+      type = CB0R_ERR;
+      goto l_fail;
+    }
     count += (uint32_t)(start[size]) << 8;
   l_array1:
     size += 1;
+    if (start + size >= stop) {
+      type = CB0R_ERR;
+      goto l_fail;
+    }
     count += start[size];
     goto l_skip;
-  l_array: 
+  l_array:
     count = (start[0] & 0x1f);
     goto l_skip;
 
